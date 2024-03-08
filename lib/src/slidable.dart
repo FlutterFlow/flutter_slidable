@@ -148,12 +148,12 @@ class _SlidableState extends State<Slidable>
 
     if (widget.startActionPaneInitiallyOpen && widget.startActionPane != null) {
       SchedulerBinding.instance.addPostFrameCallback(
-        (_) => controller.openStartActionPane(),
+        (_) => controller.openStartActionPane(duration: Duration.zero),
       );
     } else if (widget.endActionPaneInitiallyOpen &&
         widget.endActionPane != null) {
       SchedulerBinding.instance.addPostFrameCallback(
-        (_) => controller.openEndActionPane(),
+        (_) => controller.openEndActionPane(duration: Duration.zero),
       );
     }
   }
