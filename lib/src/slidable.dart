@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/src/auto_close_behavior.dart';
 import 'package:flutter_slidable/src/notifications_old.dart';
@@ -27,6 +28,8 @@ class Slidable extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.dragStartBehavior = DragStartBehavior.down,
     this.useTextDirection = true,
+    this.startActionPaneInitiallyOpen = false,
+    this.endActionPaneInitiallyOpen = false,
     required this.child,
   }) : super(key: key);
 
@@ -96,6 +99,12 @@ class Slidable extends StatefulWidget {
   ///  * [DragGestureRecognizer.dragStartBehavior], which gives an example for the different behaviors.
   final DragStartBehavior dragStartBehavior;
 
+  /// Whether the start action pane is initially open.
+  final bool startActionPaneInitiallyOpen;
+
+  /// Whether the end action pane is initially open.
+  final bool endActionPaneInitiallyOpen;
+
   /// The widget below this widget in the tree.
   ///
   /// {@macro flutter.widgets.ProxyWidget.child}
@@ -136,6 +145,17 @@ class _SlidableState extends State<Slidable>
     super.initState();
     controller = SlidableController(this)
       ..actionPaneType.addListener(handleActionPanelTypeChanged);
+
+    if (widget.startActionPaneInitiallyOpen && widget.startActionPane != null) {
+      SchedulerBinding.instance.addPostFrameCallback(
+        (_) => controller.openStartActionPane(),
+      );
+    } else if (widget.endActionPaneInitiallyOpen &&
+        widget.endActionPane != null) {
+      SchedulerBinding.instance.addPostFrameCallback(
+        (_) => controller.openEndActionPane(),
+      );
+    }
   }
 
   @override
